@@ -309,7 +309,7 @@ const authActions = {
       
       //blacklist current access token
       if (await redisClient.set('BL_' + username.toString(), accessToken)) {
-        res.status(httpStatusCode.OK).send({
+        return res.status(httpStatusCode.OK).send({
           success: true,
           message: StringConstant.SUCCESSFUL_LOGOUT,
         });

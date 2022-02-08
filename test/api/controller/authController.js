@@ -54,7 +54,8 @@ async function registerNewCustomer() {
   response.body.should.have.property("success").to.equal(true)
   response.should.have.status(200)
   response.body.should.be.a("object")
-  response.body.should.have.property("token") // To verify if the user object has the token
+  response.body.should.have.property("accessToken") // To verify if the user object has the token
+  response.body.should.have.property("refreshToken") // To verify if the user object has the token
 }
 
 async function loginExistingCustomer() {
@@ -66,7 +67,8 @@ async function loginExistingCustomer() {
     loginCustomer.body.should.have.property("success").to.equal(true)
     loginCustomer.should.have.status(200)
     loginCustomer.body.should.be.a("object")
-    loginCustomer.body.should.have.property("token") // To verify if the customer object has the token
+    loginCustomer.body.should.have.property("accessToken") // To verify if the user object has the token
+    loginCustomer.body.should.have.property("refreshToken") // To verify if the user object has the token
 }
 
 
@@ -78,7 +80,9 @@ async function rejectNonExistentCustomerData() {
     }
     rejectLoginCustomer.body.should.have.property("success").to.equal(false)
     rejectLoginCustomer.should.have.status(401)
-    rejectLoginCustomer.body.should.not.have.property("token") // To verify if the customer object has the token
+    rejectLoginCustomer.body.should.not.have.property("accessToken") // To verify if the customer object has the token
+    rejectLoginCustomer.body.should.not.have.property("refreshToken") // To verify if the customer object has the token
+
 }
 
 async function verifyUserAuthentication() {
