@@ -1,0 +1,17 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# dotenv environment variables file
+.env
+.env.test
+
+#Recovery / Back-up code
+.emergency
+
+# methods folder
+methods/
+*.redis

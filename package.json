@@ -1,0 +1,51 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node server",
+    "dev": "cross-env NODE_ENV=development nodemon server",
+    "test": "cross-env NODE_ENV=test mocha --recursive --exit --timeout 10000"
+  },
+  "keywords": [],
+  "author": ",mukundan",
+  "license": "MIT",
+  "dependencies": {
+    "add": "^2.0.6",
+    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "deep-email-validator": "^0.1.18",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.12.1",
+    "jsonwebtoken": "^8.5.1",
+    "log4js": "^6.3.0",
+    "logger": "^0.0.1",
+    "mocha": "^9.0.3",
+    "mongoose": "^5.13.2",
+    "morgan": "^1.10.0",
+    "node": "^16.6.1",
+    "nodemon": "^2.0.12",
+    "password-validator": "^5.1.1",
+    "redis": "^3.1.2",
+    "run": "^1.4.0",
+    "supertest": "^6.1.5",
+    "test": "^0.6.0",
+    "validator": "^13.6.0",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": {
+    "url": ""
+  },
+  "homepage": ""
+}
