@@ -2,6 +2,7 @@
 const express = require('express')
 const router = express.Router()
 const authActions = require('../controllers/authController')
+const hotelActions = require('../controllers/hotelController')
 const auth = require("../middleware/auth");
 
 /*
@@ -29,10 +30,22 @@ router.get("/logoutUser",auth, authActions.logoutUser);
 router.post("/registerCustomer", authActions.registerNewCustomer);
 
 /*
+ * Registering a new Hotel
+ * @route POST /registerHotel
+ */
+router.post("/registerHotel", hotelActions.registerNewHotel);
+
+/*
  * Authenticate and login an existing customer
  * @route POST /loginCustomer
  */
 router.post("/loginCustomer", authActions.loginExistingCustomer);
+
+/*
+ * Authenticate and login an existing hotel
+ * @route POST /loginHotel
+ */
+router.post("/loginHotel", hotelActions.loginExistingHotel);
 
 /*
  * Provide and Update new access token
