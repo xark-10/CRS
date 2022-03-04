@@ -37,17 +37,31 @@ const saltValue = 12
       refreshToken: {
         type: String
       },
-      firstName: {
+      description: {
         type: String,
         require: true,
       },
-      lastName: {
+      address: {
         type: String,
         require: true,
-      }
+      },
+    star_rating: {
+        type: String,
+        require: true,
+      },
+    free_rooms:{
+        type: Number,
+        require: true,
     },
+    booked_rooms:{
+        type: Number,
+        require: true,
+    }
+},
+
     { collection: "Hotels" }
   );
+
 
   hotelSchema.pre('save', function (next) {
   var user = this;

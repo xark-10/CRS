@@ -46,7 +46,7 @@ const saltValue = 12
         require: true,
       }
     },
-    { collection: "users" }
+    { collection: "Users" }
   );
 
 userSchema.pre('save', function (next) {

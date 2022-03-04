@@ -17,13 +17,13 @@ const authActions = {
   // Registration function:
   registerNewHotel: async function (req, res) {
     try {
-      const { username, password, verifyPassword, firstName, lastName, } = req.body
+      const { username, password, verifyPassword, description, address,star_rating,free_rooms,booked_rooms } = req.body
       // Email and Password Validator
       const { valid, reason, validators } = await emailValidator(username)
       const isPasswordValid = passwordSchema.validate(password)
 
       // To check if all the required fields are provided
-      if (!username || !password || !verifyPassword || !firstName || !lastName) {
+      if (!username || !password || !verifyPassword || !description || !address|| !star_rating || !free_rooms || !booked_rooms) {
         return res.status(httpStatusCode.CONFLICT).send({
           success: false,
           message: authStringConstant.MISSING_FIELDS,
@@ -69,8 +69,11 @@ const authActions = {
             username: username,
             email: username,
             password: password,
-            lastName: lastName,
-            firstName: firstName,
+            description: description,
+            address: address,
+            star_rating: star_rating,
+            free_rooms: free_rooms,
+            booked_rooms: booked_rooms
           });
           // Performs the save option the schema
           newHotel.save(function (err, newHotel) {
