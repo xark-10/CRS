@@ -7,7 +7,7 @@ const { Logger } = require("logger")
 require('dotenv').config()
 
   // User Schema definition
-  var rooms = new mongoose.Schema(
+  var booking = new mongoose.Schema(
     {
       hotelName:{
         type: String,
@@ -24,29 +24,28 @@ require('dotenv').config()
         require: true,
         unique: true,
       },
-      category: {
+      room_id:{
         type: String,
-        require: true,
-      },
-      beds: {
-        type: Number
       },
       price: {
         type: String
       },
-      isBooked:{
-        type: Boolean
+      guests:{
+          type:Number
       },
-      userid:{
+      user_id:{
         type: String
       },
-      boookingid:{
+      check_in:{
+        type: String
+      },
+      check_out:{
         type: String
       },
     },
-    { collection: "Rooms" }
+    { collection: "Bookings" }
   );
 
 
 
-module.exports = mongoose.model("Rooms", rooms);
+module.exports = mongoose.model("Bookings", booking);

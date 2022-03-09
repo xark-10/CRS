@@ -4,6 +4,7 @@ const logger = require('../config/logger.js')
 const jwt = require('jsonwebtoken')
 const authStringConstant = require('../constants/strings')
 const Hotel = require('../models/hotel')
+const Room = require('../models/rooms')
 const httpStatusCode = require('../constants/httpStatusCodes');
 const bcrypt = require('bcrypt')
 const passwordSchema = require('../validator/passwordValidator')
@@ -202,6 +203,24 @@ const authActions = {
       // send proper response
     }
   }, // Login logic ends here
+  newRoom: async function(req,res){
+    const {hotelName,hotel_id,category,beds,price} = req.body 
+
+    const newRoom = Room({
+      hotelName : hotelName,
+      hotel_id : hotel_id,
+      category : category,
+      beds : beds,
+      price: price
+    })
+
+    newRoom.save(function (err){
+      if(!err){
+        res.send("rooom registerd")
+      }
+    });
+
+  }
 
 };
 

@@ -56,6 +56,34 @@ const saltValue = 12
     booked_rooms:{
         type: Number,
         require: true,
+    },
+    no_Couple:{
+        type: Number,
+        require: true,
+    },
+    no_Single:{
+      type: Number,
+      require: true,
+    },
+    no_Doublecart:{
+      type: Number,
+      require: true,
+    },
+    no_Doublecart:{
+      type: Number,
+      require: true,
+    },
+    deluxe:{
+      type: Number,
+      require: true,
+    },
+    luxury:{
+      type: Number,
+      require: true,
+    },
+    phone:{
+      type: Number,
+      require: true,
     }
 },
 

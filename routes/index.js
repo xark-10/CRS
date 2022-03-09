@@ -3,6 +3,7 @@ const express = require('express')
 const router = express.Router()
 const authActions = require('../controllers/authController')
 const hotelActions = require('../controllers/hotelController')
+const bookingController = require('../controllers/bookingController')
 const auth = require("../middleware/auth");
 
 /*
@@ -52,6 +53,12 @@ router.post("/loginHotel", hotelActions.loginExistingHotel);
  * @route POST /renewAccessToken
  */
 router.post("/renewAccessToken", authActions.renewAccessToken);
+
+
+router.post("/newBooking", auth,bookingController.newBooking);
+
+
+router.post("/newRoom", hotelActions.newRoom);
 
 /*
  * Navigating to the error page
