@@ -9,14 +9,6 @@ require('dotenv').config()
   // User Schema definition
   var booking = new mongoose.Schema(
     {
-      hotelName:{
-        type: String,
-        lowercase: true,
-        trim: true,
-        require: true,
-        unique: true,
-        minlength: 6,
-      },
       hotel_id: {
         type: String,
         lowercase: true,

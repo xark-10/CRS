@@ -3,14 +3,10 @@ const jwt = require('jsonwebtoken')
 const authStringConstant = require('../constants/strings')
 const User = require('../models/user')
 const Rooms = require('../models/rooms')
+const Hotel = require('../models/hotel')
 const Booking = require('../models/booking')
 const httpStatusCode = require('../constants/httpStatusCodes');
-const bcrypt = require('bcrypt')
-const passwordSchema = require('../validator/passwordValidator')
-const emailValidator = require('../validator/emailValidator');
-const redisClient = require('../database/redisConnection')
-const { decode } = require('punycode');
-const booking = require('../models/booking.js')
+
 
 
 const bookingActions = {
@@ -26,7 +22,7 @@ const bookingActions = {
               }
               //decode the payload
               const decodedAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_KEY);
-              const { hotel_id, room_id, check_in, check_out, guests,hotelName,user_id } = req.body;
+              const { hotel_id, room_id, check_in, check_out, guests } = req.body;
 
               if (!hotel_id && !room_id && !check_in && !check_out && !guests && !category) {
                 res.status(httpStatusCode.BAD_REQUEST).send({
@@ -40,6 +36,8 @@ const bookingActions = {
 
               const user = await User.findOne({ username });
               const room = await Rooms.findOne({_id:room_id});
+              const hotel = await Hotel.findOne({_id:hotel_id})
+              
 
               const roomPrice = room.price; 
 
@@ -60,10 +58,9 @@ const bookingActions = {
                     room_id :room_id,
                     hotel_id :hotel_id,
                     price : roomPrice,
-                    user_id : user_id,
+                    user_id : user._id,
                     check_in :check_in,
                     check_out :check_out,
-                    hotelName : hotelName,
                     guests: guests
                 });
                 newBooking.save(function (err, newBooking){
@@ -74,6 +71,8 @@ const bookingActions = {
                           error: err.message,
                         });
                       } else {
+
+                        Hotel.updateOne({_id : hotel_id},{$set:{free_rooms: hotel.free_rooms-1,booked_rooms: hotel.bookedRooms+1}})
                         return res.status(httpStatusCode.OK).send({
                             success: true,
                             message: authStringConstant.BOOKING_SUCCESSFUL,

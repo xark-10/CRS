@@ -11,6 +11,7 @@ const passwordSchema = require('../validator/passwordValidator')
 const emailValidator = require('../validator/emailValidator');
 const redisClient = require('../database/redisConnection')
 const { decode } = require('punycode');
+const { log } = require('console')
 
 
 // Authentication Controller Commands:
@@ -18,13 +19,13 @@ const authActions = {
   // Registration function:
   registerNewHotel: async function (req, res) {
     try {
-      const { username, password, verifyPassword, description, address,star_rating,free_rooms,booked_rooms } = req.body
+      const { username, password, verifyPassword, description, address, star_rating, free_rooms, booked_rooms, phoneNumber } = req.body
       // Email and Password Validator
       const { valid, reason, validators } = await emailValidator(username)
       const isPasswordValid = passwordSchema.validate(password)
 
       // To check if all the required fields are provided
-      if (!username || !password || !verifyPassword || !description || !address|| !star_rating || !free_rooms || !booked_rooms) {
+      if (!username || !password || !verifyPassword || !description || !address || !star_rating || !free_rooms || !booked_rooms ||!phoneNumber) {
         return res.status(httpStatusCode.CONFLICT).send({
           success: false,
           message: authStringConstant.MISSING_FIELDS,
@@ -74,7 +75,13 @@ const authActions = {
             address: address,
             star_rating: star_rating,
             free_rooms: free_rooms,
-            booked_rooms: booked_rooms
+            booked_rooms: booked_rooms,
+            no_Couple: 0,
+            no_Single: 0,
+            no_Doublecart: 0,
+            deluxe: 0,
+            luxury: 0,
+            phone:phoneNumber
           });
           // Performs the save option the schema
           newHotel.save(function (err, newHotel) {
@@ -203,22 +210,78 @@ const authActions = {
       // send proper response
     }
   }, // Login logic ends here
-  newRoom: async function(req,res){
-    const {hotelName,hotel_id,category,beds,price} = req.body 
-
-    const newRoom = Room({
-      hotelName : hotelName,
-      hotel_id : hotel_id,
-      category : category,
-      beds : beds,
-      price: price
-    })
-
-    newRoom.save(function (err){
-      if(!err){
-        res.send("rooom registerd")
+  newRoom: async function (req, res) {
+    try {
+      if (
+        process.env.NODE_ENV === "development" ||
+        process.env.NODE_ENV === "production"
+      ) {
+        var accessToken = req.body.accessToken;
+      } else {
+        var accessToken = req.query.accessToken;
       }
-    });
+      //decode the payload
+      const decodedAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_KEY);
+      const { category, beds, price,number,  maxGuests} = req.body
+
+      if (!category && !beds && !price) {
+        res.status(httpStatusCode.BAD_REQUEST).send({
+          success: false,
+          message: authStringConstant.MISSING_INPUT
+        });
+      }
+      //Get the username from the decoded json web token
+      const username = decodedAccessToken.username
+
+
+      const hotel = await Hotel.findOne({ username });
+
+      if (!hotel) {
+        res.status(httpStatusCode.UNAUTHORIZED).send({
+          success: false,
+          message: authStringConstant.USER_DOES_NOT_EXIST
+        });
+      } else if (hotel) {
+        const newRoom = Room({
+          hotel_id: hotel._id,
+          type: category,
+          beds: beds,
+          price: price,
+          number:number,
+          maxGuests:maxGuests
+        })
+
+        newRoom.save(function (err) {
+          if (err) {
+            console.log(err);
+            return res.status(httpStatusCode.CONFLICT).send({
+              success: false,
+              message: authStringConstant.FAILURE_ROOMENTRY,
+              error: err.message,
+            });
+          } else {
+            if (category === 'no_Couple') {
+              Hotel.updateOne({ _id: hotel._id }, { $set: { no_couple: hotel.no_couple + 1 } })
+            } else if (category === 'no_Single') {
+              Hotel.updateOne({ _id: hotel._id }, { $set: { no_Single: hotel.no_Single + 1 } })
+            } else if (category === 'no_Doublecart') {
+              Hotel.updateOne({ _id: hotel._id }, { $set: { no_Doublecart: hotel.no_Doublecart + 1 } })
+            } else if (category === 'deluxe') {
+              Hotel.updateOne({ _id: hotel._id }, { $set: { deluxe: hotel.deluxe + 1 } })
+            } else {
+              Hotel.updateOne({ _id: hotel._id }, { $set: { luxury: hotel.luxury + 1 } })
+            }
+            return res.status(httpStatusCode.OK).send({
+              success: true,
+              message: authStringConstant.ROOM_SUCCESSFUL,
+            });
+          }
+        });
+      }
+
+    } catch (err) {
+      console.log(err)
+    }
 
   }
 

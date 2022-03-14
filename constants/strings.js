@@ -31,6 +31,8 @@ module.exports =
     TOKEN_MISMATCH: "Given Token doesn't match with the existing token ",
     ROOM_NOTFOUND: "No such Room",
     FAILURE_BOOKING: "Booking failed please try again",
-    BOOKING_SUCCESSFUL : "Booking successful"
+    FAILURE_ROOMENTRY: "Room entry failed please try again",
+    BOOKING_SUCCESSFUL : "Booking successful",
+    ROOM_SUCCESSFUL : "Room registered"
   };
 

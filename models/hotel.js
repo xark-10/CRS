@@ -69,10 +69,6 @@ const saltValue = 12
       type: Number,
       require: true,
     },
-    no_Doublecart:{
-      type: Number,
-      require: true,
-    },
     deluxe:{
       type: Number,
       require: true,

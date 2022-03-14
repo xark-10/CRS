@@ -3,49 +3,52 @@
 
 // Required dependencies
 const mongoose = require("mongoose")
+const Schema = mongoose.Schema;
 const { Logger } = require("logger")
 require('dotenv').config()
 
-  // User Schema definition
-  var rooms = new mongoose.Schema(
-    {
-      hotelName:{
-        type: String,
-        lowercase: true,
-        trim: true,
-        require: true,
-        unique: true,
-        minlength: 6,
-      },
-      hotel_id: {
-        type: String,
-        lowercase: true,
-        trim: true,
-        require: true,
-        unique: true,
-      },
-      category: {
-        type: String,
-        require: true,
-      },
-      beds: {
-        type: Number
-      },
-      price: {
-        type: String
-      },
-      isBooked:{
-        type: Boolean
-      },
-      userid:{
-        type: String
-      },
-      boookingid:{
-        type: String
-      },
+// User Schema definition
+var rooms = new Schema(
+  {
+    hotel_id: {
+      type: String,
+      require: true,
     },
-    { collection: "Rooms" }
-  );
+    number: {
+      type: String,
+      required: [true, 'Room number is required']
+    },
+    type: {
+      type: String,
+      required: [true, 'Please specify room type']
+    },
+    price: {
+      type: Number,
+      required: [true, 'Please specify price per night']
+    },
+    maxGuests: {
+      type: Number,
+      required: [true, 'Please specify maximum number of guests allowed']
+    },
+    dateCreated: {
+      type: Date,
+      default: Date.now
+    },
+    beds: {
+      type: Number
+    },
+    isBooked: {
+      type: Boolean
+    },
+    userid: {
+      type: String
+    },
+    boookingid: {
+      type: String
+    },
+  },
+  { collection: "Rooms" }
+);
 
 
 

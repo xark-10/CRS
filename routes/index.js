@@ -58,7 +58,7 @@ router.post("/renewAccessToken", authActions.renewAccessToken);
 router.post("/newBooking", auth,bookingController.newBooking);
 
 
-router.post("/newRoom", hotelActions.newRoom);
+router.post("/newRoom",auth, hotelActions.newRoom);
 
 /*
  * Navigating to the error page
