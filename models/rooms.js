@@ -37,15 +37,6 @@ var rooms = new Schema(
     beds: {
       type: Number
     },
-    isBooked: {
-      type: Boolean
-    },
-    userid: {
-      type: String
-    },
-    boookingid: {
-      type: String
-    },
   },
   { collection: "Rooms" }
 );

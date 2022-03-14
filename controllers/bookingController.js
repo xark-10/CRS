@@ -55,8 +55,8 @@ const bookingActions = {
               // Validate if user exist in our database
               else if (user , room) {
                 const newBooking = Booking({
-                    room_id :room_id,
                     hotel_id :hotel_id,
+                    room_id :room_id,
                     price : roomPrice,
                     user_id : user._id,
                     check_in :check_in,
@@ -71,8 +71,7 @@ const bookingActions = {
                           error: err.message,
                         });
                       } else {
-
-                        Hotel.updateOne({_id : hotel_id},{$set:{free_rooms: hotel.free_rooms-1,booked_rooms: hotel.bookedRooms+1}})
+                        Hotel.updateOne({_id : hotel_id},{"free_rooms": hotel.free_rooms-1,"booked_rooms": hotel.bookedRooms+1})
                         return res.status(httpStatusCode.OK).send({
                             success: true,
                             message: authStringConstant.BOOKING_SUCCESSFUL,

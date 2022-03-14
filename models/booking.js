@@ -14,10 +14,12 @@ require('dotenv').config()
         lowercase: true,
         trim: true,
         require: true,
-        unique: true,
       },
       room_id:{
         type: String,
+        lowercase: true,
+        trim: true,
+        require: true,
       },
       price: {
         type: String

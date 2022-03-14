@@ -4,6 +4,7 @@ const router = express.Router()
 const authActions = require('../controllers/authController')
 const hotelActions = require('../controllers/hotelController')
 const bookingController = require('../controllers/bookingController')
+const findActions = require('../controllers/findActions')
 const auth = require("../middleware/auth");
 
 /*
@@ -59,6 +60,9 @@ router.post("/newBooking", auth,bookingController.newBooking);
 
 
 router.post("/newRoom",auth, hotelActions.newRoom);
+
+router.get("/findHotels", findActions.findHotels);
+
 
 /*
  * Navigating to the error page

@@ -19,13 +19,13 @@ const authActions = {
   // Registration function:
   registerNewHotel: async function (req, res) {
     try {
-      const { username, password, verifyPassword, description, address, star_rating, free_rooms, booked_rooms, phoneNumber } = req.body
+      const { username, password, verifyPassword, description, address, star_rating, phoneNumber,city ,town } = req.body
       // Email and Password Validator
       const { valid, reason, validators } = await emailValidator(username)
       const isPasswordValid = passwordSchema.validate(password)
 
       // To check if all the required fields are provided
-      if (!username || !password || !verifyPassword || !description || !address || !star_rating || !free_rooms || !booked_rooms ||!phoneNumber) {
+      if (!username || !password || !verifyPassword || !description || !address || !star_rating || !city || !town ||!phoneNumber) {
         return res.status(httpStatusCode.CONFLICT).send({
           success: false,
           message: authStringConstant.MISSING_FIELDS,
@@ -73,9 +73,9 @@ const authActions = {
             password: password,
             description: description,
             address: address,
+            city: city,
+            town:town,
             star_rating: star_rating,
-            free_rooms: free_rooms,
-            booked_rooms: booked_rooms,
             no_Couple: 0,
             no_Single: 0,
             no_Doublecart: 0,
@@ -261,15 +261,17 @@ const authActions = {
             });
           } else {
             if (category === 'no_Couple') {
-              Hotel.updateOne({ _id: hotel._id }, { $set: { no_couple: hotel.no_couple + 1 } })
+              const no_Couple = (hotel.no_Couple +1).toString()
+              console.log(no_Couple)
+              Hotel.updateOne({ _id: hotel._id },  {no_Couple:no_Couple} )
             } else if (category === 'no_Single') {
-              Hotel.updateOne({ _id: hotel._id }, { $set: { no_Single: hotel.no_Single + 1 } })
+              Hotel.updateOne({ _id: hotel._id }, {no_Single:1})
             } else if (category === 'no_Doublecart') {
-              Hotel.updateOne({ _id: hotel._id }, { $set: { no_Doublecart: hotel.no_Doublecart + 1 } })
+              Hotel.updateOne({ _id: hotel._id }, {no_Doublecart:1})
             } else if (category === 'deluxe') {
-              Hotel.updateOne({ _id: hotel._id }, { $set: { deluxe: hotel.deluxe + 1 } })
+              Hotel.updateOne({ _id: hotel._id }, {deluxe:1})
             } else {
-              Hotel.updateOne({ _id: hotel._id }, { $set: { luxury: hotel.luxury + 1 } })
+              Hotel.updateOne({ _id: hotel._id },{luxury:1} )
             }
             return res.status(httpStatusCode.OK).send({
               success: true,
@@ -283,7 +285,7 @@ const authActions = {
       console.log(err)
     }
 
-  }
+  },
 
 };
 

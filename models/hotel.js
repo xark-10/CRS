@@ -8,86 +8,90 @@ const bcrypt = require('bcrypt')
 require('dotenv').config()
 const saltValue = 12
 
-  // User Schema definition
-  var hotelSchema = new mongoose.Schema(
-    {
-      username:{
-        type: String,
-        lowercase: true,
-        trim: true,
-        require: true,
-        unique: true,
-        minlength: 6,
-      },
-      email: {
-        type: String,
-        lowercase: true,
-        trim: true,
-        require: true,
-        unique: true,
-        minlength: 6,
-      },
-      password: {
-        type: String,
-        require: true,
-      },
-      accessToken: {
-        type: String
-      },
-      refreshToken: {
-        type: String
-      },
-      description: {
-        type: String,
-        require: true,
-      },
-      address: {
-        type: String,
-        require: true,
-      },
+// User Schema definition
+var hotelSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      lowercase: true,
+      trim: true,
+      require: true,
+      unique: true,
+      minlength: 6,
+    },
+    email: {
+      type: String,
+      lowercase: true,
+      trim: true,
+      require: true,
+      unique: true,
+      minlength: 6,
+    },
+    password: {
+      type: String,
+      require: true,
+    },
+    accessToken: {
+      type: String
+    },
+    refreshToken: {
+      type: String
+    },
+    description: {
+      type: String,
+      require: true,
+    },
+    address: {
+      type: String,
+      require: true,
+    },
     star_rating: {
-        type: String,
-        require: true,
-      },
-    free_rooms:{
-        type: Number,
-        require: true,
+      type: String,
+      require: true,
     },
-    booked_rooms:{
-        type: Number,
-        require: true,
-    },
-    no_Couple:{
-        type: Number,
-        require: true,
-    },
-    no_Single:{
+    totalBookings: {
       type: Number,
       require: true,
     },
-    no_Doublecart:{
+    city: {
+      type: String,
+      require: true,
+    },
+    town: {
+      type: String,
+      require: true,
+    },
+    no_Couple: {
       type: Number,
       require: true,
     },
-    deluxe:{
+    no_Single: {
       type: Number,
       require: true,
     },
-    luxury:{
+    no_Doublecart: {
       type: Number,
       require: true,
     },
-    phone:{
+    deluxe: {
+      type: Number,
+      require: true,
+    },
+    luxury: {
+      type: Number,
+      require: true,
+    },
+    phone: {
       type: Number,
       require: true,
     }
-},
+  },
 
-    { collection: "Hotels" }
-  );
+  { collection: "Hotels" }
+);
 
 
-  hotelSchema.pre('save', function (next) {
+hotelSchema.pre('save', function (next) {
   var user = this;
   if (this.isModified('password') || this.isNew) {
     bcrypt.genSalt(saltValue, function (err, salt) {
