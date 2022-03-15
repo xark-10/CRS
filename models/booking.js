@@ -3,23 +3,20 @@
 
 // Required dependencies
 const mongoose = require("mongoose")
+const Schema = mongoose.Schema;
 const { Logger } = require("logger")
 require('dotenv').config()
 
   // User Schema definition
   var booking = new mongoose.Schema(
     {
-      hotel_id: {
-        type: String,
-        lowercase: true,
-        trim: true,
-        require: true,
+      hotel: {
+        type: Schema.Types.ObjectId,
+        ref: "Hotel",
       },
-      room_id:{
-        type: String,
-        lowercase: true,
-        trim: true,
-        require: true,
+      room: {
+        type: Schema.Types.ObjectId,
+        ref: "Rooms",
       },
       price: {
         type: String
@@ -27,9 +24,9 @@ require('dotenv').config()
       guests:{
           type:Number
       },
-      user_id:{
-        type: String
-      },
+      user:{
+        type: Schema.Types.ObjectId,
+        ref: "Users",      },
       check_in:{
         type: String
       },

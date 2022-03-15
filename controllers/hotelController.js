@@ -243,13 +243,14 @@ const authActions = {
         });
       } else if (hotel) {
         const newRoom = Room({
-          hotel_id: hotel._id,
           type: category,
           beds: beds,
           price: price,
           number:number,
           maxGuests:maxGuests
         })
+
+        newRoom.hotel = hotel._id;
 
         newRoom.save(function (err) {
           if (err) {
@@ -259,20 +260,7 @@ const authActions = {
               message: authStringConstant.FAILURE_ROOMENTRY,
               error: err.message,
             });
-          } else {
-            if (category === 'no_Couple') {
-              const no_Couple = (hotel.no_Couple +1).toString()
-              console.log(no_Couple)
-              Hotel.updateOne({ _id: hotel._id },  {no_Couple:no_Couple} )
-            } else if (category === 'no_Single') {
-              Hotel.updateOne({ _id: hotel._id }, {no_Single:1})
-            } else if (category === 'no_Doublecart') {
-              Hotel.updateOne({ _id: hotel._id }, {no_Doublecart:1})
-            } else if (category === 'deluxe') {
-              Hotel.updateOne({ _id: hotel._id }, {deluxe:1})
-            } else {
-              Hotel.updateOne({ _id: hotel._id },{luxury:1} )
-            }
+          } else {            
             return res.status(httpStatusCode.OK).send({
               success: true,
               message: authStringConstant.ROOM_SUCCESSFUL,

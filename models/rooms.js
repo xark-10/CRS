@@ -5,14 +5,15 @@
 const mongoose = require("mongoose")
 const Schema = mongoose.Schema;
 const { Logger } = require("logger")
+const Hotel = require('./hotel')
 require('dotenv').config()
 
 // User Schema definition
 var rooms = new Schema(
   {
-    hotel_id: {
-      type: String,
-      require: true,
+    hotel: {
+      type: Schema.Types.ObjectId,
+      ref: "Hotel",
     },
     number: {
       type: String,
