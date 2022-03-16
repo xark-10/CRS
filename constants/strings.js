@@ -30,6 +30,7 @@ module.exports =
     INVALID_TOKEN: "Invalid Token",
     TOKEN_MISMATCH: "Given Token doesn't match with the existing token ",
     ROOM_NOTFOUND: "No such Room",
+    HOTEL_NOTFOUND: "No such Hotel",
     FAILURE_BOOKING: "Booking failed please try again",
     FAILURE_ROOMENTRY: "Room entry failed please try again",
     BOOKING_SUCCESSFUL : "Booking successful",

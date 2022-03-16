@@ -31,11 +31,9 @@ var hotelSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
-    accessToken: {
-      type: String
-    },
-    refreshToken: {
-      type: String
+    hotelName:{
+      type: String,
+      require: true,
     },
     description: {
       type: String,

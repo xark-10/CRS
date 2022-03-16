@@ -11,13 +11,13 @@ const httpStatusCode = require('../constants/httpStatusCodes');
 const findActions = {
     findHotels: async function (req, res) {
         try {
-            const { city, category, town } = req.body;
+            const { city, town ,hotelName} = req.body;
             if (!city) {
                 res.status(httpStatusCode.BAD_REQUEST).send({
                     success: false,
                     message: authStringConstant.MISSING_INPUT
                 });
-            } else {
+            } else if (city && !town && !hotelName) {
                 Hotel.find({ city: city }, function (err, foundHotels) {
                     if (err) {
                         res.status(httpStatusCode.BAD_REQUEST).send({
@@ -26,14 +26,94 @@ const findActions = {
                         });
                     }
                     else {
+                        if(foundHotels.length === 0){
+                            res.status(httpStatusCode.BAD_REQUEST).send({
+                                success: false,
+                                message: authStringConstant.HOTEL_NOTFOUND
+                            });
+                        }else{
+                            res.status(httpStatusCode.OK).send({
+                                foundHotels: foundHotels
+                            });
+                        }
+                    }
+                });
+            } else if (city && town && !hotelName) {
+                Hotel.find({ city: city, town :town}, function (err, foundHotels) {
+                    if (err) {
+                        res.status(httpStatusCode.BAD_REQUEST).send({
+                            success: false,
+                            message: err
+                        });
+                    }
+                    else {
+                        if(foundHotels.length === 0){
+                            res.status(httpStatusCode.BAD_REQUEST).send({
+                                success: false,
+                                message: authStringConstant.HOTEL_NOTFOUND
+                            });
+                        }else{
+                            res.status(httpStatusCode.OK).send({
+                                foundHotels: foundHotels
+                            });
+                        }
+                    }
+                });
+            } else if(city && hotelName && !town ){
+                Hotel.find({ city: city, hotelName :hotelName}, function (err, foundHotels) {
+                if (err) {
+                    res.status(httpStatusCode.BAD_REQUEST).send({
+                        success: false,
+                        message: err
+                    });
+                }
+                else {
+                    if(foundHotels.length === 0){
+                        res.status(httpStatusCode.BAD_REQUEST).send({
+                            success: false,
+                            message: authStringConstant.HOTEL_NOTFOUND
+                        });
+                    }else{
                         res.status(httpStatusCode.OK).send({
                             foundHotels: foundHotels
                         });
                     }
+                }
+            });
+            }else if(city && hotelName && town){
+                Hotel.find({ city: city, hotelName :hotelName, town:town}, function (err, foundHotels) {
+                if (err) {
+                    res.status(httpStatusCode.BAD_REQUEST).send({
+                        success: false,
+                        message: err
+                    });
+                }
+                else {
+                    if(foundHotels.length === 0){
+                        res.status(httpStatusCode.BAD_REQUEST).send({
+                            success: false,
+                            message: authStringConstant.HOTEL_NOTFOUND
+                        });
+                    }else{
+                        res.status(httpStatusCode.OK).send({
+                            foundHotels: foundHotels
+                        });
+                    }
+                }
+            });
+            }
+            else {
+                res.status(httpStatusCode.BAD_REQUEST).send({
+                    success: false,
+                    message: authStringConstant.UNKNOWN_ERROR
                 });
             }
         } catch (err) {
             console.log(err)
+            res.status(httpStatusCode.BAD_REQUEST).send({
+                success: false,
+                message: err
+            });
         }
     },
     findUser: async function (req, res) {
@@ -51,7 +131,7 @@ const findActions = {
                 return res.status(403).send(StringConstant.TOKEN_MISSING);
             }
             //decode the payload
-            try{
+            try {
 
                 const decodedAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_KEY);
                 if (decodedAccessToken) {
@@ -74,12 +154,13 @@ const findActions = {
                 } else {
                     return res.status(401).send(StringConstant.INVALID_TOKEN);
                 }
-            }catch(err){
+            } catch (err) {
                 return res.status(401).send(StringConstant.INVALID_TOKEN);
             }
         } catch (err) {
             return res.status(401).send({
-                err: err.message});
+                err: err.message
+            });
         }
     }
 }
