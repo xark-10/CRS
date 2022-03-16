@@ -63,6 +63,9 @@ router.post("/newRoom",auth, hotelActions.newRoom);
 
 router.get("/findHotels", findActions.findHotels);
 
+router.get("/findUser", findActions.findUser);
+
+
 
 /*
  * Navigating to the error page
