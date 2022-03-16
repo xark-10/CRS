@@ -19,7 +19,7 @@ const authActions = {
   // Registration function:
   registerNewHotel: async function (req, res) {
     try {
-      const { username, password, verifyPassword, description, address, star_rating, phoneNumber,city ,town } = req.body
+      const { username, password, verifyPassword, description, address, star_rating, phoneNumber,city ,town ,hotelName} = req.body
       // Email and Password Validator
       const { valid, reason, validators } = await emailValidator(username)
       const isPasswordValid = passwordSchema.validate(password)
@@ -68,6 +68,7 @@ const authActions = {
         } else {
           // Creates a object based on the user schema
           var newHotel = Hotel({
+            hotelName: hotelName,
             username: username,
             email: username,
             password: password,
