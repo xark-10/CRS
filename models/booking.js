@@ -28,10 +28,10 @@ require('dotenv').config()
         type: Schema.Types.ObjectId,
         ref: "Users",      },
       check_in:{
-        type: String
+        type: Date
       },
       check_out:{
-        type: String
+        type: Date
       },
     },
     { collection: "Bookings" }
