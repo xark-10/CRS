@@ -6,7 +6,7 @@ const Rooms = require('../models/rooms')
 const Hotel = require('../models/hotel')
 const Booking = require('../models/booking')
 const httpStatusCode = require('../constants/httpStatusCodes');
-
+const moment = require('moment')
 
 
 const bookingActions = {
@@ -22,7 +22,11 @@ const bookingActions = {
       }
       //decode the payload
       const decodedAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_KEY);
-      const { hotel_id, room_id, check_in, check_out, guests } = req.body;
+      const { hotel_id, room_id, check_in, check_out, guests, category } = req.body;
+      const checkInDateFormat = moment(new Date(check_in)).format('YYYY-MM-DD');
+      const checkOutDateFormat = moment(new Date(check_out)).format('YYYY-MM-DD')
+      const checkInDate = new Date(checkInDateFormat)
+      const checkOutDate = new Date(checkOutDateFormat)
 
       if (!hotel_id && !room_id && !check_in && !check_out && !guests && !category) {
         res.status(httpStatusCode.BAD_REQUEST).send({
@@ -35,7 +39,7 @@ const bookingActions = {
 
 
       const user = await User.findOne({ username });
-      const room = await Rooms.findOne({ _id: room_id }).populate("hotel");
+      const room = await Rooms.findOne({ _id: room_id })
       const hotel = await Hotel.findOne({ _id: hotel_id })
 
 
@@ -54,31 +58,47 @@ const bookingActions = {
       }
       // Validate if user exist in our database
       else if (user, room) {
-        const newBooking = Booking({
-          hotel: hotel_id,
-          room: room_id,
-          price: roomPrice,
-          user: user._id,
-          check_in: check_in,
-          check_out: check_out,
-          guests: guests
-        });
-        newBooking.save(function (err, newBooking) {
-          if (err) {
-            return res.status(httpStatusCode.CONFLICT).send({
-              success: false,
-              message: authStringConstant.FAILURE_BOOKING,
-              error: err.message,
+        Booking.find({ "check_out": { $gte: checkInDate } }, function (err, foundBookings) {
+           if(foundBookings.length === 0 || foundBookings.length < hotel.deluxe ) {
+            const newBooking = Booking({
+              hotel: hotel_id,
+              room: room_id,
+              price: roomPrice,
+              user: user._id,
+              check_in: checkInDate,
+              check_out: checkOutDate,
+              guests: guests
             });
-          } else {
-            console.log(room.hotel)
-            return res.status(httpStatusCode.OK).send({
-              success: true,
-              message: authStringConstant.BOOKING_SUCCESSFUL,
-              Booking_id: newBooking._id,
+            newBooking.save(function (err, newBooking) {
+              if (err) {
+                return res.status(httpStatusCode.CONFLICT).send({
+                  success: false,
+                  message: authStringConstant.FAILURE_BOOKING,
+                  error: err.message,
+                });
+              } else {
+                return res.status(httpStatusCode.OK).send({
+                  success: true,
+                  message: authStringConstant.BOOKING_SUCCESSFUL,
+                  Booking_id: newBooking._id,
+                });
+              }
+            })
+          }
+          else if(foundBookings.length >= hotel.deluxe ){
+            res.status(httpStatusCode.GATEWAY_TIMEOUT).send({
+              success: false,
+              message: authStringConstant.ROOM_BOOKED,
             });
           }
-        })
+          else if(err){
+            res.status(httpStatusCode.GATEWAY_TIMEOUT).send({
+              success: false,
+              message: authStringConstant.UNKNOWN_ERROR,
+              error: err.message
+            });
+          }
+        });
       }
       else {
         res.status(httpStatusCode.GATEWAY_TIMEOUT).send({

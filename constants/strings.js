@@ -34,6 +34,7 @@ module.exports =
     FAILURE_BOOKING: "Booking failed please try again",
     FAILURE_ROOMENTRY: "Room entry failed please try again",
     BOOKING_SUCCESSFUL : "Booking successful",
-    ROOM_SUCCESSFUL : "Room registered"
+    ROOM_SUCCESSFUL : "Room registered",
+    ROOM_BOOKED: "Sorry the room you are looking for is currently booked"
   };
 

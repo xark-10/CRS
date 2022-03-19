@@ -3,6 +3,7 @@
 
 // Required dependencies
 const mongoose = require("mongoose")
+const Schema = mongoose.Schema;
 const { Logger } = require("logger")
 const bcrypt = require('bcrypt')
 require('dotenv').config()
@@ -44,7 +45,13 @@ const saltValue = 12
       lastName: {
         type: String,
         require: true,
-      }
+      },
+      myBookings:[
+        { 
+          type: Schema.Types.ObjectId,
+          ref: "Bookings",
+        }
+      ],
     },
     { collection: "Users" }
   );
