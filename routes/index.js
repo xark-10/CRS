@@ -55,15 +55,41 @@ router.post("/loginHotel", hotelActions.loginExistingHotel);
  */
 router.post("/renewAccessToken", authActions.renewAccessToken);
 
-
+/*
+ * Authenticate and create new Booking
+ * @route POST /newBooking
+ */
 router.post("/newBooking", auth,bookingController.newBooking);
 
-
+/*
+ * Authenticate and create new Room
+ * @route POST /newRoom
+ */
 router.post("/newRoom",auth, hotelActions.newRoom);
 
+/*
+ * Find hotels based on search
+ * @route GET /findHotels
+ */
 router.get("/findHotels", findActions.findHotels);
 
+/*
+ * Fetch user details
+ * @route GET /findUser
+ */
 router.get("/findUser", findActions.findUser);
+
+/*
+ * Fetch user details
+ * @route GET /bookingHistory
+ */
+router.get("/bookingHistory", findActions.bookingHistory);
+
+/*
+ * Fetch today bookings
+ * @route GET /bookingHistory
+ */
+router.get("/findTodayBookings", findActions.findTodayBookings);
 
 
 

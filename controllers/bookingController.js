@@ -58,7 +58,7 @@ const bookingActions = {
       }
       // Validate if user exist in our database
       else if (user, room) {
-        Booking.find({ "check_out": { $gte: checkInDate } }, function (err, foundBookings) {
+        Booking.find({ hotel: hotel._id, "check_out": { $gte: checkInDate } }, function (err, foundBookings) {
            if(foundBookings.length === 0 || foundBookings.length < hotel.deluxe ) {
             const newBooking = Booking({
               hotel: hotel_id,
