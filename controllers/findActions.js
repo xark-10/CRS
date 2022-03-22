@@ -224,13 +224,16 @@ const findActions = {
             });
         }
     },
-    findTodayBookings: async function (req, res) {
+    findBookings: async function (req, res) {
         try {
             if (
                 process.env.NODE_ENV === "development" ||
                 process.env.NODE_ENV === "production"
             ) {
                 var accessToken = req.body.accessToken;
+                var fromdate = req.body.fromdate
+                var todate = req.body.todate
+
             } else {
                 var accessToken = req.query.accessToken;
             }
@@ -245,11 +248,12 @@ const findActions = {
                 if (decodedAccessToken) {
                     //Find the user name from the token 
                     const username = decodedAccessToken.username
-                    const todayDateFormat = moment(new Date()).format('YYYY-MM-DD')
-                    const todayDate = new Date(todayDateFormat)
-                    console.log(todayDate)
-                    const hotel = Hotel.findOne({ username }, function (err, user) {
-                        if (!user) {
+                    const fromDateFormat = moment(new Date(fromdate)).format('YYYY-MM-DD')
+                    const fromDate = new Date(fromDateFormat)
+                    const toDateFormat = moment(new Date(fromdate)).format('YYYY-MM-DD')
+                    const toDate = new Date(todate)
+                    const hotel = Hotel.findOne({ username }, function (err, hotel) {
+                        if (!hotel) {
                             res.status(httpStatusCode.UNAUTHORIZED).send({
                                 success: false,
                                 message: authStringConstant.USER_DOES_NOT_EXIST
@@ -261,17 +265,8 @@ const findActions = {
                             });
                         }
                         else {
-                            try {
-                                Bookings.find({ hotel: hotel._id, "check_in" : { "$lte" :todayDate } }, function (err, todaycheckIn) {
-                                    console.log(todaycheckIn)
+                                Bookings.find({ hotel: hotel._id, "check_in": { $gte: fromDate, $lt: toDate } }, function (err, checkIns) {
                                     if (err) {
-                                        res.status(httpStatusCode.UNAUTHORIZED).send({
-                                            success: false,
-                                            message: authStringConstant.USER_DOES_NOT_EXIST
-                                        });
-                                    }
-                                    Bookings.find({ hotel: hotel._id, "check_out": todayDate }, function (err, todaycheckOut) {
-                                        if (err) {
                                             res.status(httpStatusCode.UNAUTHORIZED).send({
                                                 success: false,
                                                 message: authStringConstant.USER_DOES_NOT_EXIST
@@ -279,17 +274,10 @@ const findActions = {
                                         }
                                         else {
                                             res.status(httpStatusCode.OK).send({
-                                                checkIn: todaycheckIn,
-                                                checkOut:todaycheckOut
+                                                checkIn: checkIns,
                                             });
                                         }
                                     })
-                                })
-                            } catch (err) {
-                                return res.status(401).send({
-                                    err: err.message
-                                });
-                            }
 
                         }
                     })

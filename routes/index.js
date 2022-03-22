@@ -77,19 +77,19 @@ router.get("/findHotels", findActions.findHotels);
  * Fetch user details
  * @route GET /findUser
  */
-router.get("/findUser", findActions.findUser);
+router.post("/findUser", findActions.findUser);
 
 /*
  * Fetch user details
  * @route GET /bookingHistory
  */
-router.get("/bookingHistory", findActions.bookingHistory);
+router.post("/bookingHistory", findActions.bookingHistory);
 
 /*
  * Fetch today bookings
- * @route GET /bookingHistory
+ * @route POST /bookingHistory
  */
-router.get("/findTodayBookings", findActions.findTodayBookings);
+router.post("/findBookings", auth, findActions.findBookings);
 
 
 
