@@ -250,8 +250,8 @@ const findActions = {
                     const username = decodedAccessToken.username
                     const fromDateFormat = moment(new Date(fromdate)).format('YYYY-MM-DD')
                     const fromDate = new Date(fromDateFormat)
-                    const toDateFormat = moment(new Date(fromdate)).format('YYYY-MM-DD')
-                    const toDate = new Date(todate)
+                    const toDateFormat = moment(new Date(todate)).format('YYYY-MM-DD')
+                    const toDate = new Date(toDateFormat)
                     const hotel = Hotel.findOne({ username }, function (err, hotel) {
                         if (!hotel) {
                             res.status(httpStatusCode.UNAUTHORIZED).send({
@@ -265,19 +265,31 @@ const findActions = {
                             });
                         }
                         else {
-                                Bookings.find({ hotel: hotel._id, "check_in": { $gte: fromDate, $lt: toDate } }, function (err, checkIns) {
-                                    if (err) {
+                            Bookings.find({ hotel: hotel._id, "check_in": { $gte: fromDate, $lte: toDate } }, function (err, checkIns) {
+                                if (err) {
+                                    res.status(httpStatusCode.UNAUTHORIZED).send({
+                                        success: false,
+                                        message: err
+                                    });
+                                } else {
+                                    Bookings.find({ hotel: hotel._id, "check_out": { $gte: fromDate, $lte: toDate } }, function (err, checkOuts) {
+                                        if (err) {
                                             res.status(httpStatusCode.UNAUTHORIZED).send({
                                                 success: false,
-                                                message: authStringConstant.USER_DOES_NOT_EXIST
+                                                message: err
                                             });
                                         }
                                         else {
                                             res.status(httpStatusCode.OK).send({
                                                 checkIn: checkIns,
+                                                checkOut:checkOuts
                                             });
                                         }
                                     })
+                                }
+
+
+                            })
 
                         }
                     })

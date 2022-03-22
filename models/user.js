@@ -46,12 +46,6 @@ const saltValue = 12
         type: String,
         require: true,
       },
-      myBookings:[
-        { 
-          type: Schema.Types.ObjectId,
-          ref: "Bookings",
-        }
-      ],
     },
     { collection: "Users" }
   );
