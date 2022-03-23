@@ -67,7 +67,8 @@ const bookingActions = {
               user: user._id,
               check_in: checkInDate,
               check_out: checkOutDate,
-              guests: guests
+              guests: guests,
+              hotelName: hotel.hotelName
             });
             newBooking.save(function (err, newBooking) {
               if (err) {

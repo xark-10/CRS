@@ -14,6 +14,9 @@ require('dotenv').config()
         type: Schema.Types.ObjectId,
         ref: "Hotel",
       },
+      hotelName:{
+        type: String
+      },
       room: {
         type: Schema.Types.ObjectId,
         ref: "Rooms",

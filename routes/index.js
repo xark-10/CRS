@@ -6,6 +6,7 @@ const hotelActions = require('../controllers/hotelController')
 const bookingController = require('../controllers/bookingController')
 const findActions = require('../controllers/findActions')
 const auth = require("../middleware/auth");
+const paymentActions = require('../controllers/paymentController')
 
 /*
  * Ping route
@@ -91,6 +92,10 @@ router.post("/bookingHistory", findActions.bookingHistory);
  */
 router.post("/findBookings", auth, findActions.findBookings);
 
+router.post("/stripe", paymentActions.stripeRoute)
+router.post("/pay", paymentActions.payRoute)
+
+
 
 
 /*
@@ -98,6 +103,7 @@ router.post("/findBookings", auth, findActions.findBookings);
  * This should be the last route else any after it won't work
  */
 router.all("*", authActions.errorPageRoute);
+
 
 module.exports = router
 

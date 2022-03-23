@@ -6,6 +6,9 @@ const routes = require('./routes/index');
 require("dotenv").config();
 const logger = require('./config/logger.js')
 
+
+
+
 const app = express();
 
 // HTTP request logger middleware for node.js
@@ -17,7 +20,7 @@ if (process.env.NODE_ENV === "development") {
 connect.connectDB();
 
 app.use(cors());
-
+app.use("/stripe", express.raw({ type: "*/*" }));
 // Form data parsing
 app.use(
   express.urlencoded({
