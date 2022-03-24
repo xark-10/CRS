@@ -78,13 +78,13 @@ router.get("/findHotels", findActions.findHotels);
  * Fetch user details
  * @route GET /findUser
  */
-router.post("/findUser", findActions.findUser);
+router.post("/findUser",auth, findActions.findUser);
 
 /*
  * Fetch user details
  * @route GET /bookingHistory
  */
-router.post("/bookingHistory", findActions.bookingHistory);
+router.post("/bookingHistory",auth, findActions.bookingHistory);
 
 /*
  * Fetch today bookings
