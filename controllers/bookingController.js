@@ -22,13 +22,13 @@ const bookingActions = {
       }
       //decode the payload
       const decodedAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_KEY);
-      const { hotel_id, room_id, check_in, check_out, guests, category } = req.body;
+      const { hotel_id, check_in, check_out, guests, category } = req.body;
       const checkInDateFormat = moment(new Date(check_in)).format('YYYY-MM-DD');
       const checkOutDateFormat = moment(new Date(check_out)).format('YYYY-MM-DD')
       const checkInDate = new Date(checkInDateFormat)
       const checkOutDate = new Date(checkOutDateFormat)
 
-      if (!hotel_id && !room_id && !check_in && !check_out && !guests && !category) {
+      if (!hotel_id  && !check_in && !check_out && !guests && !category) {
         res.status(httpStatusCode.BAD_REQUEST).send({
           success: false,
           message: authStringConstant.MISSING_INPUT
@@ -39,7 +39,7 @@ const bookingActions = {
 
 
       const user = await User.findOne({ username });
-      const room = await Rooms.findOne({ _id: room_id })
+      const room = await Rooms.findOne({ hotel: hotel_id, type: category})
       const hotel = await Hotel.findOne({ _id: hotel_id })
 
 
@@ -62,7 +62,7 @@ const bookingActions = {
            if(foundBookings.length === 0 || foundBookings.length < hotel.deluxe ) {
             const newBooking = Booking({
               hotel: hotel_id,
-              room: room_id,
+              room: room._id,
               price: roomPrice,
               user: user._id,
               check_in: checkInDate,
