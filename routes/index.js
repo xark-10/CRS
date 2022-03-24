@@ -7,6 +7,8 @@ const bookingController = require('../controllers/bookingController')
 const findActions = require('../controllers/findActions')
 const auth = require("../middleware/auth");
 const paymentActions = require('../controllers/paymentController')
+const uploads = multer({ storage, fileFilter });
+const multer = require('multer');
 
 /*
  * Ping route
@@ -94,6 +96,13 @@ router.post("/findBookings", auth, findActions.findBookings);
 
 router.post("/stripe", paymentActions.stripeRoute)
 router.post("/pay", paymentActions.payRoute)
+
+router.post(
+    '/upload-profile',
+    Auth,
+    uploads.single('profile'),
+    imageActions.uploads
+  );
 
 
 
