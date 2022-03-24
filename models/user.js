@@ -46,6 +46,9 @@ const saltValue = 12
         type: String,
         require: true,
       },
+      avatar: {
+        type: String,
+      }
     },
     { collection: "Users" }
   );
