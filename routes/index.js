@@ -5,10 +5,19 @@ const authActions = require('../controllers/authController')
 const hotelActions = require('../controllers/hotelController')
 const bookingController = require('../controllers/bookingController')
 const findActions = require('../controllers/findActions')
+const imageActions = require('../controllers/imageController')
 const auth = require("../middleware/auth");
 const paymentActions = require('../controllers/paymentController')
-const uploads = multer({ storage, fileFilter });
 const multer = require('multer');
+const storage = multer.diskStorage({});
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith('image')) {
+      cb(null, true);
+    } else {
+      cb('invalid image file!', false);
+    }
+  };
+const uploads = multer({ storage, fileFilter });
 
 /*
  * Ping route
@@ -99,9 +108,9 @@ router.post("/pay", paymentActions.payRoute)
 
 router.post(
     '/upload-profile',
-    Auth,
+    auth,
     uploads.single('profile'),
-    imageActions.uploads
+    imageActions.profileImageUpload
   );
 
 

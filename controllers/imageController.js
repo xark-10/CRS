@@ -53,3 +53,4 @@ const imageActions = {
 
     }
 }
+module.exports = imageActions
