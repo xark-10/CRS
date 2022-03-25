@@ -42,10 +42,10 @@ const imageActions = {
                     .status(201)
                     .json({ success: true, message: 'Your profile has updated!' });
             } catch (error) {
+                console.log(error);
                 res
                     .status(500)
                     .json({ success: false, message: 'server error, try after some time' });
-                console.log('Error while uploading profile image', error.message);
             }
         } catch (error) {
 
