@@ -36,8 +36,8 @@ const imageActions = {
                 const updatedUser = await User.findByIdAndUpdate(
                     user._id,
                     { avatar: result.url },
-                    { new: true }
                 );
+                console.log(v)
                 res
                     .status(201)
                     .json({ success: true, message: 'Your profile has updated!' });
