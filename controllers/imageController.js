@@ -6,6 +6,7 @@ const cloudinary = require('../database/cloudinaryConfig');
 const imageActions = {
     profileImageUpload: async function (req, res) {
         try {
+            console.log(req.body)
             if (
                 process.env.NODE_ENV === "development" ||
                 process.env.NODE_ENV === "production"

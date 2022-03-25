@@ -12,7 +12,7 @@ const moment = require('moment')
 const findActions = {
     findHotels: async function (req, res) {
         try {
-            const { city, town, hotelName } = req.body;
+            const { city, town, hotelName } = req.query;
             if (!city) {
                 res.status(httpStatusCode.BAD_REQUEST).send({
                     success: false,
