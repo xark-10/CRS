@@ -107,7 +107,7 @@ router.post("/stripe", paymentActions.stripeRoute)
 router.post("/pay", paymentActions.payRoute)
 
 router.post(
-    '/upload-profile',
+    '/uploadProfile',
     auth,
     uploads.single('profile'),
     imageActions.profileImageUpload
