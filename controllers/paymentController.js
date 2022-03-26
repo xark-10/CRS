@@ -13,7 +13,7 @@ const stripePayment = {
                 if (foundBookings.length === 0 || foundBookings.length < hotel.deluxe) {
                     if (!email) return res.status(400).json({ message: "Please enter a valid email" });
                     const paymentIntent = await stripe.paymentIntents.create({
-                        amount: price,
+                        amount: Math.round(1000*100),
                         currency: "INR",
                         "automatic_payment_methods[enabled]": true,
                         metadata: { email },
