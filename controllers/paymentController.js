@@ -1,13 +1,49 @@
 const Stripe = require('stripe')
 const stripe = Stripe(process.env.STRIPE_SECRET);
-
+const Rooms = require('../models/rooms')
+const Hotel = require('../models/hotel')
+const Booking = require('../models/booking')
 
 
 const stripePayment = {
     payRoute: async function (req, res) {
         try {
-            const { email,hotel_id,check_in } = req.body;
+            const { email, hotel_id, check_in, category } = req.body;
+            const room = await Rooms.findOne({ hotel: hotel_id, type: category })
+            const hotel = await Hotel.findOne({ _id: hotel_id })
+
+
+            const roomPrice = room.price;
+            let categoryCount = 0
+            if (category === 'couple') {
+                categoryCount = hotel.couple
+                console.log(categoryCount)
+            } else if (category === 'single') {
+                categoryCount = hotel.single
+
+            } else if (category === 'superDeluxe') {
+                categoryCount = hotel.doublecart
+
+            } else if (category === 'deluxe') {
+                categoryCount = hotel.deluxe
+
+            } else if (category === 'luxury') {
+                categoryCount = hotel.luxury
+
+            } else {
+                categoryCount = null
+            }
             if (!email) return res.status(400).json({ message: "Please enter a valid email" });
+            Booking.find({ hotel: hotel._id, "check_out": { $gte: checkInDate } }, function (err, foundBookings) {
+                if (foundBookings.length === 0 || foundBookings.length < categoryCount) {
+
+                } else {
+                    res.status(httpStatusCode.GATEWAY_TIMEOUT).send({
+                        success: false,
+                        message: authStringConstant.ROOM_BOOKED,
+                    });
+                }
+            })
             const paymentIntent = await stripe.paymentIntents.create({
                 amount: Math.round(1000 * 100),
                 currency: "INR",
