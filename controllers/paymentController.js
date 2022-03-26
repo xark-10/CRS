@@ -7,12 +7,12 @@ const stripePayment = {
     payRoute: async function (req, res) {
         try {
             const { email } = req.body;
-            if (!email) return res.status(400).json({ message: "Please enter a valid email" });
+            // if (!email) return res.status(400).json({ message: "Please enter a valid email" });
             const paymentIntent = await stripe.paymentIntents.create({
                 amount: Math.round(25 * 100),
                 currency: "INR",
                 "automatic_payment_methods[enabled]": true,
-                metadata: { email },
+                // metadata: { email },
             });
             const clientSecret = paymentIntent.client_secret;
             res.json({ message: "Payment initiated", clientSecret });
