@@ -25,7 +25,7 @@ const authActions = {
       const isPasswordValid = passwordSchema.validate(password)
 
       // To check if all the required fields are provided
-      if (!username || !password || !verifyPassword || !description || !address || !star_rating || !city || !town ||!phoneNumber || couple || single || superDeluxe || deluxe || luxury) {
+      if (!username || !password || !verifyPassword || !description || !address || !star_rating || !city || !town ||!phoneNumber || !couple || !single || !superDeluxe || !deluxe || !luxury) {
         return res.status(httpStatusCode.CONFLICT).send({
           success: false,
           message: authStringConstant.MISSING_FIELDS,
