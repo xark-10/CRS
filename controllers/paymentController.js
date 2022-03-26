@@ -3,6 +3,8 @@ const stripe = Stripe(process.env.STRIPE_SECRET);
 const Rooms = require('../models/rooms')
 const Hotel = require('../models/hotel')
 const Booking = require('../models/booking')
+const moment = require('moment')
+
 
 
 const stripePayment = {
@@ -33,6 +35,9 @@ const stripePayment = {
             } else {
                 categoryCount = null
             }
+            const checkInDateFormat = moment(new Date(check_in)).format('YYYY-MM-DD');
+            const checkOutDateFormat = moment(new Date(check_out)).format('YYYY-MM-DD')
+            const checkInDate = new Date(checkInDateFormat)
             if (!email) return res.status(400).json({ message: "Please enter a valid email" });
             Booking.find({ hotel: hotel._id, "check_out": { $gte: checkInDate } }, function (err, foundBookings) {
                 if (foundBookings.length === 0 || foundBookings.length < categoryCount) {
