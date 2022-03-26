@@ -8,12 +8,12 @@ const Booking = require('../models/booking')
 const stripePayment = {
     payRoute: async function (req, res) {
         try {
-            const { email, hotel_id,checkInDate } = req.body;
+            const { email, hotel_id,checkInDate,price } = req.body;
             Booking.find({ hotel: hotel_id, "check_out": { $gte: checkInDate } },async function (err, foundBookings) {
                 if (foundBookings.length === 0 || foundBookings.length < hotel.deluxe) {
                     if (!email) return res.status(400).json({ message: "Please enter a valid email" });
                     const paymentIntent = await stripe.paymentIntents.create({
-                        amount: Math.round(25 * 100),
+                        amount: price,
                         currency: "INR",
                         "automatic_payment_methods[enabled]": true,
                         metadata: { email },
