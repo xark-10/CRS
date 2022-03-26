@@ -42,17 +42,15 @@ const bookingActions = {
       const room = await Rooms.findOne({ hotel: hotel_id, type: category})
       const hotel = await Hotel.findOne({ _id: hotel_id })
 
-
       const roomPrice = room.price;
       let categoryCount = 0
       if(category === 'couple'){
         categoryCount = hotel.couple
-        console.log(categoryCount)
       }else if( category === 'single'){
         categoryCount = hotel.single
 
       }else if( category === 'superDeluxe'){
-         categoryCount = hotel.doublecart
+         categoryCount = hotel.superDeluxe
 
       }else if( category === 'deluxe'){
         categoryCount = hotel.deluxe
@@ -63,8 +61,6 @@ const bookingActions = {
       }else {
         categoryCount = null
       }
-
-
       if (!user) {
         res.status(httpStatusCode.UNAUTHORIZED).send({
           success: false,
@@ -79,6 +75,7 @@ const bookingActions = {
       // Validate if user exist in our database
       else if (user, room) {
         Booking.find({ hotel: hotel._id, "check_out": { $gte: checkInDate } }, function (err, foundBookings) {
+                    console.log(foundBookings)
            if(foundBookings.length === 0 || foundBookings.length < categoryCount ) {
             const newBooking = Booking({
               hotel: hotel_id,
