@@ -59,15 +59,15 @@ var hotelSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
-    no_Couple: {
+    couple: {
       type: Number,
       require: true,
     },
-    no_Single: {
+    single: {
       type: Number,
       require: true,
     },
-    no_Doublecart: {
+    superDeluxe: {
       type: Number,
       require: true,
     },

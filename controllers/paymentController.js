@@ -6,7 +6,7 @@ const stripe = Stripe(process.env.STRIPE_SECRET);
 const stripePayment = {
     payRoute: async function (req, res) {
         try {
-            const { email } = req.body;
+            const { email,hotel_id,check_in } = req.body;
             if (!email) return res.status(400).json({ message: "Please enter a valid email" });
             const paymentIntent = await stripe.paymentIntents.create({
                 amount: Math.round(1000 * 100),

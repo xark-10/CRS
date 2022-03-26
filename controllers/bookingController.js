@@ -44,6 +44,26 @@ const bookingActions = {
 
 
       const roomPrice = room.price;
+      let categoryCount = 0
+      if(category === 'couple'){
+        categoryCount = hotel.couple
+        console.log(categoryCount)
+      }else if( category === 'single'){
+        categoryCount = hotel.single
+
+      }else if( category === 'superDeluxe'){
+         categoryCount = hotel.doublecart
+
+      }else if( category === 'deluxe'){
+        categoryCount = hotel.deluxe
+
+      }else if( category === 'luxury'){
+        categoryCount = hotel.luxury
+
+      }else {
+        categoryCount = null
+      }
+
 
       if (!user) {
         res.status(httpStatusCode.UNAUTHORIZED).send({
@@ -59,7 +79,7 @@ const bookingActions = {
       // Validate if user exist in our database
       else if (user, room) {
         Booking.find({ hotel: hotel._id, "check_out": { $gte: checkInDate } }, function (err, foundBookings) {
-           if(foundBookings.length === 0 || foundBookings.length < hotel.deluxe ) {
+           if(foundBookings.length === 0 || foundBookings.length < categoryCount ) {
             const newBooking = Booking({
               hotel: hotel_id,
               room: room._id,
