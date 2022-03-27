@@ -1,28 +1,31 @@
+
 // Required dependencies:
 const logger = require('../config/logger.js')
 const jwt = require('jsonwebtoken')
 const authStringConstant = require('../constants/strings')
-const User = require('../models/user')
+const Hotel = require('../models/hotel')
+const Room = require('../models/rooms')
 const httpStatusCode = require('../constants/httpStatusCodes');
 const bcrypt = require('bcrypt')
 const passwordSchema = require('../validator/passwordValidator')
 const emailValidator = require('../validator/emailValidator');
 const redisClient = require('../database/redisConnection')
 const { decode } = require('punycode');
+const { log } = require('console')
 
 
 // Authentication Controller Commands:
 const authActions = {
   // Registration function:
-  registerNewCustomer: async function (req, res) {
+  registerNewHotel: async function (req, res) {
     try {
-      const { username, password, verifyPassword, firstName, lastName, } = req.body
+      const { username, password, verifyPassword, description, address, star_rating, phoneNumber,city ,town ,hotelName,couple,single,superDeluxe,deluxe,luxury} = req.body
       // Email and Password Validator
       const { valid, reason, validators } = await emailValidator(username)
       const isPasswordValid = passwordSchema.validate(password)
 
       // To check if all the required fields are provided
-      if (!username || !password || !verifyPassword || !firstName || !lastName) {
+      if (!username || !password || !verifyPassword || !description || !address || !star_rating || !city || !town ||!phoneNumber || !couple || !single || !superDeluxe || !deluxe || !luxury) {
         return res.status(httpStatusCode.CONFLICT).send({
           success: false,
           message: authStringConstant.MISSING_FIELDS,
@@ -54,7 +57,7 @@ const authActions = {
       else if (valid & isPasswordValid & (password === verifyPassword)) {
 
         // check if user already exist
-        const oldUser = await User.findOne({ username })
+        const oldUser = await Hotel.findOne({ username })
 
         // To check if user already exists
         if (oldUser) {
@@ -64,15 +67,25 @@ const authActions = {
           });
         } else {
           // Creates a object based on the user schema
-          var newCustomer = User({
+          var newHotel = Hotel({
+            hotelName: hotelName,
             username: username,
             email: username,
             password: password,
-            lastName: lastName,
-            firstName: firstName,
+            description: description,
+            address: address,
+            city: city,
+            town:town,
+            star_rating: star_rating,
+            couple: couple,
+            single: single,
+            superDeluxe: superDeluxe,
+            deluxe: deluxe,
+            luxury: luxury,
+            phone:phoneNumber
           });
           // Performs the save option the schema
-          newCustomer.save(function (err, newCustomer) {
+          newHotel.save(function (err, newHotel) {
             if (err) {
               return res.status(httpStatusCode.CONFLICT).send({
                 success: false,
@@ -81,7 +94,7 @@ const authActions = {
               });
             } else {
               const accessToken = jwt.sign(
-                { user_id: newCustomer._id, username },
+                { user_id: newHotel._id, username },
                 process.env.ACCESS_TOKEN_KEY,
                 {
                   expiresIn: process.env.ACCESS_TOKEN_TIME,
@@ -89,15 +102,15 @@ const authActions = {
               );
 
               const refreshToken = jwt.sign(
-                { user_id: newCustomer._id, username },
+                { user_id: newHotel._id, username },
                 process.env.REFRESH_TOKEN_KEY,
                 {
                   expiresIn: process.env.REFRESH_TOKEN_TIME,
                 }
               );
-              // newCustomer.accessToken = accessToken;
-              // newCustomer.refreshToken = refreshToken;
-              // newCustomer.save()
+              // newHotel.accessToken = accessToken;
+              // newHotel.refreshToken = refreshToken;
+              // newHotel.save()
               redisClient.get(username.toString(), (err, data) => {
                 if (err) {
                   console.log(err)
@@ -129,7 +142,7 @@ const authActions = {
   }, // Register logic ends here
 
   // Login existing customer
-  loginExistingCustomer: async function (req, res) {
+  loginExistingHotel: async function (req, res) {
     try {
       //Get user input
       const { username, password } = req.body;
@@ -139,7 +152,7 @@ const authActions = {
           message: authStringConstant.MISSING_INPUT
         });
       }
-      const user = await User.findOne({ username });
+      const user = await Hotel.findOne({ username });
       // If user details doesn't exist ask the customer to register
       if (!user) {
         res.status(httpStatusCode.UNAUTHORIZED).send({
@@ -198,98 +211,8 @@ const authActions = {
       // send proper response
     }
   }, // Login logic ends here
-
-
-  // Ping route
-  pingRoute: function (req, res) {
-    res.status(httpStatusCode.OK).send({
-      success: true,
-      message: StringConstant.SUCCESSFUL_PING,
-    });
-  },
-
-  // Home route
-  homePageRoute: function (req, res) {
-    res.status(httpStatusCode.OK).send({
-      success: true,
-      message: StringConstant.SUCCESSFUL_HOME,
-    });
-  },
-
-  // To renew a new accessToken
-  renewAccessToken: async function (req, res) {
-    //checks the environment and collects the data accordingly
-    if (
-      process.env.NODE_ENV === "development" ||
-      process.env.NODE_ENV === "production"
-    ) {
-      var refreshToken = req.body.refreshToken;
-    } else {
-      var refreshToken = req.query.refreshToken;
-    }
-    if (!refreshToken) {
-      //Token not found!
-      return res.status(403).send(StringConstant.TOKEN_MISSING);
-    }
+  newRoom: async function (req, res) {
     try {
-      //Decode the found token and verify
-      const decodedRefreshToken = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_KEY);
-      if (decodedRefreshToken) {
-        //Find the user name from the token 
-        const username = decodedRefreshToken.username
-        redisClient.get(username.toString(), (err, data) => {
-          if (data === null) {
-            return res.status(401).send(StringConstant.INVALID_TOKEN);
-          } else if (JSON.parse(data).refreshToken != refreshToken) {
-            return res.status(401).send(StringConstant.TOKEN_MISMATCH);
-          }else if(err){
-            console.log(err);
-            return res.status(401).send({data:err.message});
-
-          }
-
-        })
-        //creates new access token
-        const accessToken = jwt.sign(
-          { user_id: User._id, username },
-          process.env.ACCESS_TOKEN_KEY,
-          {
-            expiresIn: process.env.ACCESS_TOKEN_TIME,
-          }
-        );
-        redisClient.get(username.toString(), (err, data) => {
-          if (data) {
-            redisClient.set(username.toString(), JSON.stringify({ accessToken: accessToken, refreshToken: refreshToken }))
-
-          }else if(!data){
-            return res.status(401).send({ data: err.message });
-          } 
-          else if (err) {
-            return res.status(401).send({ data: err.message });
-          }
-        })
-        return res.status(httpStatusCode.OK).send({
-          success: true,
-          message: StringConstant.SUCCESSFUL_TOKEN_RENEWAL,
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-        });
-
-
-      } else {
-        return res.status(401).send(StringConstant.INVALID_TOKEN);
-      }
-    } catch (err) {
-      console.log(err)
-      //Response for Invalid token
-      return res.status(401).send(StringConstant.UNKNOWN_ERROR);
-    }
-  },
-
-  // To logout an existing customer.
-  logoutUser: async function (req, res) {
-    try {
-      // //checks the environment and collects the data accordingly
       if (
         process.env.NODE_ENV === "development" ||
         process.env.NODE_ENV === "production"
@@ -300,38 +223,59 @@ const authActions = {
       }
       //decode the payload
       const decodedAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_KEY);
-      
+      const { category, beds, price,number,  maxGuests} = req.body
+
+      if (!category && !beds && !price) {
+        res.status(httpStatusCode.BAD_REQUEST).send({
+          success: false,
+          message: authStringConstant.MISSING_INPUT
+        });
+      }
       //Get the username from the decoded json web token
       const username = decodedAccessToken.username
-      
-      // remove refreshToken
-      await redisClient.del(username.toString());
-      
-      //blacklist current access token
-      if (await redisClient.set('BL_' + username.toString(), accessToken)) {
-        res.status(httpStatusCode.OK).send({
-          success: true,
-          message: StringConstant.SUCCESSFUL_LOGOUT,
-        });
-      } else {
-        return res.status(401).send(StringConstant.UNKNOWN_ERROR);
 
+
+      const hotel = await Hotel.findOne({ username });
+
+      if (!hotel) {
+        res.status(httpStatusCode.UNAUTHORIZED).send({
+          success: false,
+          message: authStringConstant.USER_DOES_NOT_EXIST
+        });
+      } else if (hotel) {
+        const newRoom = Room({
+          type: category,
+          beds: beds,
+          price: price,
+          number:number,
+          maxGuests:maxGuests
+        })
+
+        newRoom.hotel = hotel._id;
+
+        newRoom.save(function (err) {
+          if (err) {
+            console.log(err);
+            return res.status(httpStatusCode.CONFLICT).send({
+              success: false,
+              message: authStringConstant.FAILURE_ROOMENTRY,
+              error: err.message,
+            });
+          } else {            
+            return res.status(httpStatusCode.OK).send({
+              success: true,
+              message: authStringConstant.ROOM_SUCCESSFUL,
+            });
+          }
+        });
       }
 
     } catch (err) {
-      console.log(err.message);
-      return res.status(401).send(StringConstant.UNKNOWN_ERROR);
-
+      console.log(err)
     }
+
   },
 
-  // Unidentified route
-  errorPageRoute: function (req, res) {
-    res.status(httpStatusCode.NOT_FOUND).json({
-      success: "false",
-      message: StringConstant.PAGE_NOT_FOUND
-    });
-  },
 };
 
 module.exports = authActions;

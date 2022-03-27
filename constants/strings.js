@@ -28,6 +28,13 @@ module.exports =
     //TOKEN CONSTANTS
     TOKEN_MISSING: "A token is required for authorization",
     INVALID_TOKEN: "Invalid Token",
-    TOKEN_MISMATCH: "Given Token doesn't match with the existing token "
+    TOKEN_MISMATCH: "Given Token doesn't match with the existing token ",
+    ROOM_NOTFOUND: "No such Room",
+    HOTEL_NOTFOUND: "No such Hotel",
+    FAILURE_BOOKING: "Booking failed please try again",
+    FAILURE_ROOMENTRY: "Room entry failed please try again",
+    BOOKING_SUCCESSFUL : "Booking successful",
+    ROOM_SUCCESSFUL : "Room registered",
+    ROOM_BOOKED: "Sorry the room you are looking for is currently booked"
   };
 
