@@ -38,6 +38,9 @@ var rooms = new Schema(
     beds: {
       type: Number
     },
+    image: {
+      type: String,
+    },
   },
   { collection: "Rooms" }
 );

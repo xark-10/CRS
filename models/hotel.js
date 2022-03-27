@@ -82,7 +82,10 @@ var hotelSchema = new mongoose.Schema(
     phone: {
       type: Number,
       require: true,
-    }
+    },
+    image: {
+      type: String,
+    },
   },
 
   { collection: "Hotels" }
