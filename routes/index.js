@@ -87,9 +87,15 @@ router.get("/findHotels", findActions.findHotels);
 
 /*
  * Fetch user details
- * @route GET /findUser
+ * @route POST /findUser
  */
 router.post("/findUser",auth, findActions.findUser);
+
+/*
+ * Fetch user details
+ * @route POST /findUser
+ */
+router.post("/findHotel",auth, findActions.findHotel);
 
 /*
  * Fetch user details

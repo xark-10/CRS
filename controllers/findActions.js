@@ -282,7 +282,7 @@ const findActions = {
                                         else {
                                             res.status(httpStatusCode.OK).send({
                                                 checkIn: checkIns,
-                                                checkOut:checkOuts
+                                                checkOut: checkOuts
                                             });
                                         }
                                     })
@@ -306,5 +306,51 @@ const findActions = {
             });
         }
     },
+    findHotel: async function (req, res) {
+        try {
+            if (
+                process.env.NODE_ENV === "development" ||
+                process.env.NODE_ENV === "production"
+            ) {
+                var accessToken = req.body.accessToken;
+            } else {
+                var accessToken = req.query.accessToken;
+            }
+            if (!accessToken) {
+                //Token not found!
+                return res.status(403).send(StringConstant.TOKEN_MISSING);
+            }
+            //decode the payload
+            try {
+
+                const decodedAccessToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_KEY);
+                if (decodedAccessToken) {
+                    //Find the user name from the token 
+                    const username = decodedAccessToken.username
+                    const hotel = Hotel.findOne({ username }, function (err, hotel) {
+                        if (err) {
+                            res.status(httpStatusCode.UNAUTHORIZED).send({
+                                success: false,
+                                message: authStringConstant.USER_DOES_NOT_EXIST
+                            });
+                        }
+                        else {
+                            res.status(httpStatusCode.OK).send({
+                                hotel: hotel
+                            });
+                        }
+                    })
+                } else {
+                    return res.status(401).send(StringConstant.INVALID_TOKEN);
+                }
+            } catch (err) {
+                return res.status(401).send(StringConstant.INVALID_TOKEN);
+            }
+        } catch (err) {
+            return res.status(401).send({
+                err: err.message
+            });
+        }
+    }
 }
 module.exports = findActions;
