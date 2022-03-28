@@ -351,6 +351,55 @@ const findActions = {
                 err: err.message
             });
         }
+    },
+    findPrice: async function (req,res){
+        try {
+            if (
+              process.env.NODE_ENV === "development" ||
+              process.env.NODE_ENV === "production"
+            ) {
+              var accessToken = req.body.accessToken;
+            } else {
+              var accessToken = req.query.accessToken;
+            }
+            //decode the payload
+            const { hotel_id, days, category } = req.body;
+      
+            if (!hotel_id  && !days && !category) {
+              res.status(httpStatusCode.BAD_REQUEST).send({
+                success: false,
+                message: authStringConstant.MISSING_INPUT
+              });
+            }
+            //Get the username from the decoded json web token
+      
+      
+            const room = await Rooms.findOne({ hotel: hotel_id, type: category})
+      
+            
+            if (!room) {
+              res.status(httpStatusCode.NO_CONTENT).send({
+                success: false,
+                message: authStringConstant.ROOM_NOTFOUND
+              })
+            }
+            // Validate if user exist in our database
+            else if (room) {
+                const roomPrice = room.price * days;
+                return res.status(httpStatusCode.OK).send({
+                    success: true,
+                    price : roomPrice
+                  });
+            }
+            else {
+              res.status(httpStatusCode.GATEWAY_TIMEOUT).send({
+                success: false,
+                message: authStringConstant.UNKNOWN_ERROR,
+              });
+            }
+          } catch (err) {
+            console.log(err.message)
+          }
     }
 }
 module.exports = findActions;

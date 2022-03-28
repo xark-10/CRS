@@ -12,13 +12,11 @@ const moment = require('moment')
 const stripePayment = {
     payRoute: async function (req, res) {
         try {
-            const { email, hotel_id, check_in, type } = req.body;
-            const room = await Rooms.findOne({ hotel: hotel_id, type: type })
+            const { email, hotel_id, check_in, type, price} = req.body;
             const hotel = await Hotel.findOne({ _id: hotel_id })
 
         
 
-            const roomPrice = room.price;
             let categoryCount = 0
             if (type === 'couple') {
                 categoryCount = hotel.couple
@@ -44,7 +42,7 @@ const stripePayment = {
             Booking.find({ hotel: hotel._id, "check_out": { $gte: checkInDate } },async function (err, foundBookings) {
                 if (foundBookings.length === 0 || foundBookings.length < categoryCount) {
                     const paymentIntent = await stripe.paymentIntents.create({
-                        amount: Math.round(1000 * 100),
+                        amount: price * 100,
                         currency: "INR",
                         "automatic_payment_methods[enabled]": true,
                         metadata: { email },
