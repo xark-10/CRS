@@ -109,6 +109,9 @@ router.post("/bookingHistory",auth, findActions.bookingHistory);
  */
 router.post("/findBookings", auth, findActions.findBookings);
 
+router.post("/findprice", findActions.findPrice);
+
+
 router.post("/stripe", paymentActions.stripeRoute)
 router.post("/pay", paymentActions.payRoute)
 

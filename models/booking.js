@@ -36,6 +36,9 @@ require('dotenv').config()
       check_out:{
         type: Date
       },
+      bookingName:{
+        type: String
+      },
     },
     { collection: "Bookings" }
   );
