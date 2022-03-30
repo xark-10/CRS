@@ -104,16 +104,33 @@ router.post("/findHotel",auth, findActions.findHotel);
 router.post("/bookingHistory",auth, findActions.bookingHistory);
 
 /*
- * Fetch today bookings
- * @route POST /bookingHistory
+ * Find bookings
+ * @route POST /findBookings
  */
 router.post("/findBookings", auth, findActions.findBookings);
 
+/*
+ * Find hotel price
+ * @route POST /findprice
+ */
+
 router.post("/findprice", findActions.findPrice);
 
-
+/*
+ * To fetch client secret
+ * @route POST /stripe
+ */
 router.post("/stripe", paymentActions.stripeRoute)
+/*
+ * To make payments
+ * @route POST /pay
+ */
 router.post("/pay", paymentActions.payRoute)
+
+/*
+ * Upload profile pic
+ * @route POST /uploadProfile
+ */
 
 router.post(
     '/uploadProfile',
