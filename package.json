@@ -8,7 +8,9 @@
     "dev": "cross-env NODE_ENV=development nodemon server",
     "test": "cross-env NODE_ENV=test mocha --recursive --exit --timeout 10000"
   },
-  "engines": { "node" : "16.13.2" },
+  "engines": {
+    "node": "16.13.2"
+  },
   "keywords": [],
   "author": ",mukundan",
   "license": "MIT",
@@ -40,6 +42,9 @@
     "run": "^1.4.0",
     "stripe": "^8.211.0",
     "supertest": "^6.1.5",
+    "swagger-jsdoc": "^6.2.1",
+    "swagger-ui": "^4.13.0",
+    "swagger-ui-express": "^4.5.0",
     "test": "^0.6.0",
     "validator": "^13.6.0",
     "winston": "^3.3.3"

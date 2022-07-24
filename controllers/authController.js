@@ -1,4 +1,4 @@
-// Required dependencies:
+  // Required dependencies:
 const logger = require('../config/logger.js')
 const jwt = require('jsonwebtoken')
 const authStringConstant = require('../constants/strings')
